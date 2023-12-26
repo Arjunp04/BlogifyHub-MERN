@@ -36,7 +36,7 @@ const __dirname = dirname(__filename);
 app.use("/images", express.static(join(__dirname, "/images")));
 
 app.get("/", (req, res) => {
-  res.status(200).json("Server running successfully.")
+  res.status(200).json("Server running successfully.");
 });
 
 app.use("/api/auth", authRoute);
