@@ -21,7 +21,7 @@ const Profile = () => {
     const fetchProfile = async () => {
         try
         {
-            const res = await axios.get( URL + "/api/users/" + user._id )
+            const res = await axios.get( URL + "/users/" + user._id )
             setUsername( res.data.username )
             setEmail( res.data.email )
             setPassword( res.data.password )
@@ -36,7 +36,7 @@ const Profile = () => {
         setUpdated( false )
         try
         {
-            const res = await axios.put( URL + "/api/users/" + user._id, { username, email, password }, { withCredentials: true } )
+            const res = await axios.put( URL + "/users/" + user._id, { username, email, password }, { withCredentials: true } )
             // console.log(res.data)
             setUpdated( true )
 
@@ -52,7 +52,7 @@ const Profile = () => {
     const handleUserDelete = async () => {
         try
         {
-            const res = await axios.delete( URL + "/api/users/" + user._id, { withCredentials: true } )
+            const res = await axios.delete( URL + "/users/" + user._id, { withCredentials: true } )
             setUser( null )
             navigate( "/" )
             // console.log(res.data)
@@ -67,7 +67,7 @@ const Profile = () => {
     const fetchUserPosts = async () => {
         try
         {
-            const res = await axios.get( URL + "/api/posts/user/" + user._id )
+            const res = await axios.get( URL + "/posts/user/" + user._id )
             // console.log(res.data)
             setPosts( res.data )
 

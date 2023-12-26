@@ -16,7 +16,7 @@ const Register = () => {
         e.preventDefault(); // Prevent the default form submission behavior
         try
         {
-            const res = await axios.post( URL + "/api/auth/register", { username, email, password } );
+            const res = await axios.post( URL + "/auth/register", { username, email, password } );
             setUsername( res.data.username );
             setEmail( res.data.email );
             setPassword( res.data.password );
