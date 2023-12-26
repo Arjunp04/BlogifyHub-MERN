@@ -52,7 +52,7 @@ const CreatePost = () => {
             //img upload
             try
             {
-                const imgUpload = await axios.post( URL + "/upload", data )
+                const imgUpload = await axios.post( URL + "/api/upload", data )
                 console.log( imgUpload.data )
             }
             catch ( err )
@@ -64,7 +64,7 @@ const CreatePost = () => {
         console.log( "post upload", post )
         try
         {
-            const res = await axios.post( URL + "/posts/create", post, { withCredentials: true } )
+            const res = await axios.post( URL + "/api/posts/create", post, { withCredentials: true } )
             navigate( "/posts/post/" + res.data._id )
             console.log( res.data )
 
