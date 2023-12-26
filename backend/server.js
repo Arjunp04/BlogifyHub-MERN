@@ -35,6 +35,13 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 app.use("/images", express.static(join(__dirname, "/images")));
 
+app.get("/", (req, res) => {
+  const successMessage = {
+    success: true,
+    message: "Server is running successfully!",
+  };
+});
+
 app.use("/api/auth", authRoute);
 app.use("/api/users", userRoute);
 app.use("/api/posts", postRoute);
