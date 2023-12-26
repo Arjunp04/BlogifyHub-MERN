@@ -6,8 +6,7 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js",
-    "final": "concurrently -n 'server,frontend'  \"npm run start\" \"cd ../frontend && npm run dev\""
+    "start": "concurrently -n 'server,frontend' \"nodemon server.js\" \"cd ../frontend && npm run dev\""
   },
   "keywords": [],
   "author": "Arjun R. Prajapati",
