@@ -12,17 +12,19 @@ const verifyToken = (req, res, next) => {
     return res.status(401).json("You are not authenticated!");
   }
 
-  jwt.verify(token, process.env.SECRET, async (err, data) => {
-    if (err) {
-      return res.status(403).json("Token is not valid!");
-    }
+  try {
+    // Use the JWT directly from the cookies
+    jwt.verify(token, process.env.SECRET, {}, async (err, data) => {
+      if (err) {
+        return res.status(403).json("Token is not valid!");
+      }
 
-    req.userId = data._id;
-
-    // console.log("passed");
-
-    next();
-  });
+      req.userId = data._id;
+      next();
+    });
+  } catch (error) {
+    return res.status(500).json("Internal Server Error");
+  }
 };
 
 export default verifyToken;
