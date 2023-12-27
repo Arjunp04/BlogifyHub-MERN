@@ -23,8 +23,9 @@ const PostDetails = () => {
     const fetchPost = async () => {
         try
         {
+            console.log("postId:", postId); // Log the postId for debugging
             const res = await axios.get( URL + "/api/posts/" + postId )
-            // console.log(res.data)
+            console.log(res.data)
             setPost( res.data )
         }
         catch ( err )
