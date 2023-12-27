@@ -40,7 +40,9 @@ router.delete("/:id", verifyToken, async (req, res) => {
 //get post details
 router.get("/:id", async (req, res) => {
   try {
+    console.log("Requested postId:", req.params.id); // Log the requested postId for debugging
     const post = await Post.findById(req.params.id);
+   
     res.status(200).json(post);
   } catch (err) {
     res.status(500).json(err);
