@@ -28,7 +28,7 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 
-app.use(cors({ origin: "https://blogifyhub.vercel.app/", credentials: true }));
+app.use(cors({ origin: "https://blogifyhub.vercel.app", credentials: true }));
 app.use(cookieParser());
 
 const __filename = fileURLToPath(import.meta.url);
