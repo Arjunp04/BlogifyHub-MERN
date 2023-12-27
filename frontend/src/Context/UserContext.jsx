@@ -15,8 +15,22 @@ export function UserContextProvider ( { children } ) {
   const getUser = async () => {
     try
     {
-      const res = await axios.get( URL + "/api/auth/refetch", { withCredentials: true } )
-      // console.log(res.data)
+
+      const token = localStorage.getItem( "token" );
+
+      if ( !token )
+      {
+        // Handle the case where the token is not available
+        console.log( "JWT is not available." );
+        return;
+      }
+
+      const res = await axios.get( URL + "/api/auth/refetch", {
+        headers: {
+          Authorization: `Bearer ${ token }`,
+        },
+        withCredentials: true,
+      } );
       setUser( res.data )
 
     }
