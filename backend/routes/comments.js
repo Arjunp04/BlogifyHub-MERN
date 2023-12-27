@@ -8,7 +8,7 @@ router.post("/create", verifyToken, async (req, res) => {
   try {
     const newComment = new Comment(req.body);
     const savedComment = await newComment.save();
-    res.status(200).json(savedComment);
+    res.status(201).json(savedComment);
   } catch (err) {
     res.status(500).json(err);
   }
@@ -31,7 +31,11 @@ router.put("/:id", verifyToken, async (req, res) => {
 //DELETE
 router.delete("/:id", verifyToken, async (req, res) => {
   try {
-    await Comment.findByIdAndDelete(req.params.id);
+    const deletedComment = await Comment.findByIdAndDelete(req.params.id);
+    if (!deletedComment) {
+      // If the comment doesn't exist, return a 404 status code
+      return res.status(404).json("Comment not found");
+    }
 
     res.status(200).json("Comment has been deleted!");
   } catch (err) {
