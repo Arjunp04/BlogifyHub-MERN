@@ -22,7 +22,19 @@ export function UserContextProvider ( { children } ) {
     }
     catch ( err )
     {
-      console.log( err )
+      if ( err.response && err.response.status === 404 )
+      {
+        // Handle 404 error (resource not found)
+        console.log( "Resource not found:", err.response.data );
+      } else if ( err.response && err.response.status === 401 )
+      {
+        // Handle 401 error (unauthorized)
+        console.log( "Unauthorized:", err.response.data );
+      } else
+      {
+        // Handle other errors
+        console.log( "Error fetching user:", err.message );
+      }
     }
   }
 
