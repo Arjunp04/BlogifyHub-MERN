@@ -4,7 +4,7 @@ import Footer from '../Components/Footer.jsx'
 import { ImCross } from 'react-icons/im'
 import { useContext, useState } from 'react'
 import { UserContext } from '../Context/UserContext.jsx'
-import { URL } from '../url.js'
+import { IF, URL } from '../url.js'
 import axios from 'axios'
 import { Navigate, useNavigate } from 'react-router-dom'
 
@@ -52,7 +52,7 @@ const CreatePost = () => {
             //img upload
             try
             {
-                const imgUpload = await axios.post( URL + "/api/upload", data )
+                const imgUpload = await axios.post( IF + "/api/upload", data )
                 console.log( imgUpload.data )
             }
             catch ( err )
