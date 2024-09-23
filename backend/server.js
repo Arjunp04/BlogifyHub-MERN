@@ -28,8 +28,19 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 
-app.use(cors({ origin: "https://blogifyhub.vercel.app", credentials: true }));
+const allowedOrigins = [
+  "https://blogifyhub.vercel.app",
+  "http://localhost:5173", // Change the port if needed
+];
+
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true,
+  })
+);
 app.use(cookieParser());
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
