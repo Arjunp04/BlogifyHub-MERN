@@ -35,7 +35,7 @@ const Navbar = () => {
   return (
     <div
       className="bg-[#0b05b4] text-white flex items-center justify-between
-     py-4 px-5 md:px-10 rounded-b-2xl"
+     py-4 px-5 md:px-10 rounded-b-2xl sticky top-0 z-50"
       style={{
         boxShadow:
           "rgba(0, 0, 0, 0.2) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px",
