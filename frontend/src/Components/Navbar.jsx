@@ -1,49 +1,110 @@
-import { Link, useLocation, useNavigate } from "react-router-dom"
-import { BsSearch } from 'react-icons/bs'
-import { FaBars } from 'react-icons/fa'
-import { useContext, useState } from "react"
-import Menu from "./Menu"
-import { UserContext } from "../Context/UserContext.jsx"
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { FaBars, FaSearch } from "react-icons/fa";
+import { useContext, useState } from "react";
+import Menu from "./Menu";
+import { UserContext } from "../Context/UserContext.jsx";
 
 
 const Navbar = () => {
+  const [prompt, setPrompt] = useState("");
+  const [menu, setMenu] = useState(false);
+  const navigate = useNavigate();
+  const path = useLocation().pathname;
 
-    const [ prompt, setPrompt ] = useState( "" )
-    const [ menu, setMenu ] = useState( false )
-    const navigate = useNavigate()
-    const path = useLocation().pathname
+  const showMenu = () => {
+    setMenu(!menu);
+    };
+    
+    const handleSearch = () => {
+      if (prompt) {
+        navigate("?search=" + prompt);
+      } else {
+        navigate("/");
+      }
+    };
 
-    const showMenu = () => {
-        setMenu( !menu )
-    }
+      const handleKeyDown = (e) => {
+        if (e.key === "Enter") {
+          handleSearch();
+        }
+      };
 
-    const { user } = useContext( UserContext )
-    // console.log(user)
+  const { user } = useContext(UserContext);
+  // console.log(user)
 
-    return (
-        <div className="bg-blue-700 text-white flex items-center justify-between px-6 md:px-[200px] py-4 rounded-b-2xl shadow-lg">
-            <h1 className="text-xl md:text-xl font-extrabold"><Link to="/" className=" inline-block pb-1">Blog Feed</Link></h1>
-            { path === "/" && <div className="flex justify-center items-center space-x-3">
-
-                <p onClick={ () => navigate( prompt ? "?search=" + prompt : navigate( "/" ) ) } className="cursor-pointer"><BsSearch /></p>
-
-                <input onChange={ ( e ) => setPrompt( e.target.value ) } className="outline px-9 rounded-full border-2" placeholder="Search a post" type="text" />
-
-            </div> }
-            <div className=" hidden md:flex items-center justify-center space-x-2 md:space-x-4">
-                { user ? <h3><Link to="/write" className="text-lg font-bold ">Write</Link></h3> : <h3><Link to="/login" className="text-lg font-bold ">Login</Link></h3> }
-                { user ? <div onClick={ showMenu }>
-                    <p className="cursor-pointer relative"><FaBars /></p>
-                    { menu && <Menu /> }
-                </div> : <h3><Link to="/register" className="text-lg font-bold">Register</Link></h3> }
-            </div>
-            <div onClick={ showMenu } className="md:hidden text-lg">
-                <p className="cursor-pointer relative"><FaBars /></p>
-                { menu && <Menu /> }
-            </div>
-
+  return (
+    <div
+      className="bg-[#0b05b4] text-white flex items-center justify-between
+     py-4 px-5 md:px-10 rounded-b-2xl"
+      style={{
+        boxShadow:
+          "rgba(0, 0, 0, 0.2) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px",
+      }}
+    >
+      <h1 className="text-xl md:text-xl font-extrabold tracking-wide">
+        <Link to="/" className=" inline-block pb-1">
+          BlogifyHub
+        </Link>
+      </h1>
+      {path === "/" && (
+        <div className="flex justify-center items-center space-x-2">
+          <div className="relative w-48 sm:w-72 md:w-80 lg:w-96">
+            <input
+              onChange={(e) => setPrompt(e.target.value)}
+              onKeyDown={handleKeyDown}
+              className="w-full pr-2 pl-10 rounded-full h-8 border-2 border-gray-300 focus:border-blue-800 focus:ring-1 focus:ring-blue-500 focus:outline-none text-black shadow-2xl"
+              placeholder="Search a post"
+              type="text"
+            />
+            <span
+              onClick={handleSearch}
+              className="absolute inset-y-0 left-0 flex items-center pl-3 cursor-pointer rounded-full text-gray-800 hover:bg-black hover:bg-opacity-80 transition duration-200"
+            >
+              <FaSearch size={18} />
+            </span>
+          </div>
         </div>
-    )
-}
+      )}
+      <div className=" hidden md:flex items-center justify-center space-x-2 md:space-x-4">
+        {user ? (
+          <h3>
+            <Link to="/write" className="text-xl font-bold ">
+              Write
+            </Link>
+          </h3>
+        ) : (
+          <h3>
+            <Link to="/login" className="text-xl font-bold hover:text-gray-50">
+              Login
+            </Link>
+          </h3>
+        )}
+        {user ? (
+          <div onClick={showMenu}>
+            <p className="cursor-pointer relative">
+              <FaBars />
+            </p>
+            {menu && <Menu />}
+          </div>
+        ) : (
+          <h3>
+            <Link
+              to="/register"
+              className="text-xl font-bold hover:text-slate-50"
+            >
+              Register
+            </Link>
+          </h3>
+        )}
+      </div>
+      <div onClick={showMenu} className="md:hidden text-lg">
+        <p className="cursor-pointer relative">
+          <FaBars />
+        </p>
+        {menu && <Menu />}
+      </div>
+    </div>
+  );
+};
 
-export default Navbar
+export default Navbar;
