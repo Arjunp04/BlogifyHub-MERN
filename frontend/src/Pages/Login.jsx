@@ -1,87 +1,116 @@
 import { Link, useNavigate } from "react-router-dom";
-import Footer from "../Components/Footer";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import axios from "axios";
 import { URL } from "../url.js";
 import { UserContext } from "../Context/UserContext";
+import { MdEmail, MdLock } from "react-icons/md";
+import login from "/login.svg";
+import "../css/animations.css"
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(false);
+  const [error, setError] = useState("");
   const { setUser } = useContext(UserContext);
   const navigate = useNavigate();
+  const [animate, setAnimate] = useState(false);
+
+  useEffect(() => {
+    setAnimate(true);
+  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    if (!email || !password) {
+      setError("Please fill in all fields");
+      return;
+    }
     try {
       const res = await axios.post(
         URL + "/api/auth/login",
         { email, password },
         { withCredentials: true }
       );
-      // console.log(res.data)
       setUser(res.data);
       navigate("/");
     } catch (err) {
-      setError(true);
-      console.log(err);
+      setError("Invalid email or password");
     }
   };
+
   return (
-    <>
-      <div className="bg-blue-700 text-white flex items-center justify-between px-6 md:px-[200px] py-4 rounded-b-2xl shadow-lg">
-        <h1 className="text-xl md:text-xl font-extrabold">
-          <Link to="/">Blog Feed</Link>
-        </h1>
-        <h3>
-          <Link to="/register" className="text-lg font-bold">
-            Register
-          </Link>
-        </h3>
+    <div className="flex w-full h-screen">
+      <div className="hidden md:flex md:w-1/2">
+        <img
+          src={login}
+          alt="login image"
+          className={`w-full h-full object-cover shadow-lg ${
+            animate ? "scale-in" : ""
+          }`}
+        />
       </div>
-      <div className="w-full flex justify-center items-center h-[80vh] ">
-        <div className="flex flex-col justify-center items-center space-y-4 w-[80%] md:w-[25%]">
-          <div className="bg-paleYellow p-8 rounded-2xl border-2 border-black border-solid shadow-lg">
-            <h1 className="text-xl font-bold text-center mb-6">
-              Log in to your account
-            </h1>
-            <form>
+      <div className="w-full md:w-1/2 flex justify-center items-center p-8 bg-gray-100">
+        <div
+          className={`bg-white p-8 w-full max-w-md border rounded ${
+            animate ? "scale-in" : ""
+          }`}
+          style={{ boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px" }}
+        >
+          <h1 className="text-4xl font-bold text-center mb-10 text-[#0018b7]">
+            BlogifyHub
+          </h1>
+          <h1 className="text-lg font-medium text-center mb-10 text-gray-800">
+            Please enter your details to sign in
+          </h1>
+          <form onSubmit={handleLogin}>
+            <div className="relative mb-4">
+              <MdEmail
+                className="absolute left-3 top-3 text-gray-600"
+                size={22}
+              />
               <input
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-2 border-2 mb-3 border-black outline-0"
+                className="w-full px-4 py-2 pl-12 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-0 focus:border-blue-700"
                 type="text"
                 placeholder="Enter your email"
                 autoComplete="email"
+                required
+              />
+            </div>
+            <div className="relative mb-6">
+              <MdLock
+                className="absolute left-3 top-3 text-gray-600"
+                size={22}
               />
               <input
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-2 mb-3 border-2 border-black outline-0"
+                className="w-full px-4 py-2 pl-12 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-0 focus:border-blue-700"
                 type="password"
                 placeholder="Enter your password"
                 autoComplete="current-password"
+                required
               />
-              <button
-                onClick={handleLogin}
-                className="w-full px-4 py-4 text-lg font-bold text-white bg-blue-700 rounded-lg hover:bg-royalBlue hover:text-white border-2 border-black border-solid"
-              >
-                Log in
-              </button>
-            </form>
-
-            {error && (
-              <h3 className="text-red-500 text-sm ">Something went wrong</h3>
-            )}
-            <div className="flex justify-center items-center space-x-3 mt-2">
-              <p>New here?</p>
-              <p className="text-blue-900 hover:text-royalBlue">
-                <Link to="/register">Register</Link>
-              </p>
             </div>
+            <button
+              type="submit"
+              className="w-full px-4 py-3 text-xl font-bold text-white bg-[#0018b7] rounded-lg hover:bg-blue-700 transition duration-200"
+            >
+              Log in
+            </button>
+          </form>
+
+          {error && (
+            <h3 className="text-red-500 text-sm mt-2 text-center">{error}</h3>
+          )}
+          <div className="flex justify-center items-center space-x-2 mt-4">
+            <p>Don't have an account?</p>
+            <p className="text-[#0018b7] hover:underline font-medium">
+              <Link to="/register">Register</Link>
+            </p>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
