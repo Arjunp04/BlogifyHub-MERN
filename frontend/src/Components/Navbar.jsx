@@ -58,7 +58,7 @@ const Navbar = () => {
             />
             <span
               onClick={handleSearch}
-              className="absolute inset-y-0 left-0 flex items-center pl-3 cursor-pointer rounded-full text-gray-800 hover:bg-black hover:bg-opacity-80 transition duration-200"
+              className="absolute inset-y-0 left-0 flex items-center pl-3 cursor-pointer text-gray-800"
             >
               <FaSearch size={18} />
             </span>
@@ -68,7 +68,7 @@ const Navbar = () => {
       <div className=" hidden md:flex items-center justify-center space-x-2 md:space-x-4">
         {user ? (
           <h3>
-            <Link to="/write" className="text-xl font-bold ">
+            <Link to="/write" className="text-xl font-bold hover:text-gray-50">
               Write
             </Link>
           </h3>
@@ -80,7 +80,7 @@ const Navbar = () => {
           </h3>
         )}
         {user ? (
-          <div onClick={showMenu}>
+          <div onClick={showMenu} className="hover:bg-black bg-opacity-50 duration-200 rounded-full">
             <p className="cursor-pointer relative">
               <FaBars />
             </p>
