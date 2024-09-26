@@ -65,7 +65,7 @@ const Navbar = () => {
           </div>
         </div>
       )}
-      <div className=" hidden md:flex items-center justify-center space-x-2 md:space-x-4">
+      <div className=" hidden md:flex items-center justify-center space-x-2">
         {user ? (
           <h3>
             <Link to="/write" className="text-xl font-bold hover:text-gray-50">
@@ -80,7 +80,7 @@ const Navbar = () => {
           </h3>
         )}
         {user ? (
-          <div onClick={showMenu} className="hover:bg-black bg-opacity-50 duration-200 rounded-full">
+          <div onClick={showMenu} className="hover:bg-black hover:bg-opacity-40 p-2 duration-200 rounded-full">
             <p className="cursor-pointer relative">
               <FaBars />
             </p>

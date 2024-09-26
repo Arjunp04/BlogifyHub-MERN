@@ -55,7 +55,7 @@ const MyBlogs = () => {
                 { loader ? <div className="h-[40vh] flex justify-center items-center"><Loader /></div> : !noResults ?
                     posts.map( ( post ) => (
                         <>
-                            <Link to={ user ? `/posts/post/${ post._id }` : "/login" }>
+                            <Link to={ user ? `/post/${ post._id }` : "/login" }>
                                 <HomePosts key={ post._id } post={ post } />
                             </Link>
                         </>
