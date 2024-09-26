@@ -24,41 +24,56 @@ const Menu = () => {
   };
 
   return (
-    <div className="bg-white border border-gray-300 w-[200px] z-10 flex flex-col items-start absolute top-14 right-5 md:right-32 rounded-md divide-y divide-gray-200">
+    <div className="bg-white border border-gray-300 w-[200px] z-10 flex flex-col items-start absolute top-14 right-5 md:right-12 rounded divide-y divide-gray-200">
       {!user && (
-        <h3 className="w-full text-blue-700 hover:text-white hover:bg-blue-700 cursor-pointer py-2 px-4 rounded-md font-bold">
-          <Link to="/login">Login</Link>
-        </h3>
+        <Link
+          to="/login"
+          className="w-full text-blue-700 hover:text-white hover:bg-blue-700 cursor-pointer py-2 px-4 rounded-md font-bold"
+        >
+          Login
+        </Link>
       )}
 
       {!user && (
-        <h3 className="w-full text-blue-700 hover:text-white hover:bg-blue-700 cursor-pointer py-2 px-4 rounded-md font-bold">
-          <Link to="/register">Register</Link>
-        </h3>
+        <Link
+          to="/register"
+          className="w-full text-blue-700 hover:text-white hover:bg-blue-700 cursor-pointer py-2 px-4 rounded-md font-bold"
+        >
+          Register
+        </Link>
       )}
 
       {user && (
-        <h3 className="text-white text-sm hover:text-gray-500 cursor-pointer">
-          <Link to={"/profile/" + user._id}>Profile</Link>
-        </h3>
+        <Link
+          to={"/profile/" + user._id}
+          className="w-full text-black hover:bg-gray-200 cursor-pointer py-2 px-4 font-bold"
+        >
+          Profile
+        </Link>
       )}
 
       {user && (
-        <h3 className="text-white text-sm hover:text-gray-500 cursor-pointer">
-          <Link to="/write">Write</Link>
-        </h3>
+        <Link
+          to="/write"
+          className="w-full text-black hover:bg-gray-200 cursor-pointer py-2 px-4 font-bold"
+        >
+          Write
+        </Link>
       )}
 
       {user && (
-        <h3 className="text-white text-sm hover:text-gray-500 cursor-pointer">
-          <Link to={"/myblogs/" + user._id}>My blogs</Link>
-        </h3>
+        <Link
+          to={"/myblogs/" + user._id}
+          className="w-full text-black hover:bg-gray-200 cursor-pointer py-2 px-4 font-bold"
+        >
+          My blogs
+        </Link>
       )}
 
       {user && (
         <h3
           onClick={handleLogout}
-          className="text-white text-sm hover:text-gray-500 cursor-pointer"
+          className="w-full text-black hover:bg-gray-200 cursor-pointer py-2 px-4 font-bold"
         >
           Logout
         </h3>

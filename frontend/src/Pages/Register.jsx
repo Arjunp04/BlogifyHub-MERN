@@ -43,8 +43,9 @@ const Register = () => {
         className={`w-full md:w-1/2 flex justify-center items-center p-8 bg-gray-100 `}
       >
         <div
-                  className={`bg-white p-8 w-full max-w-md border rounded ${animateLeft ? "slide-in-left" : ""
-                      }`}
+          className={`bg-white p-8 w-full max-w-md border rounded ${
+            animateLeft ? "slide-in-left" : ""
+          }`}
           style={{ boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px" }}
         >
           <h1 className="text-4xl font-bold text-center mb-6 text-[#0018b7]">
