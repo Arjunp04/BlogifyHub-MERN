@@ -11,7 +11,7 @@ const HomePosts = ({ post }) => {
   };
 
   return (
-    <div className="w-full bg-red-500">
+    <div className="w-full transition-all hover:scale-[1.02] duration-300">
       <div
         className="flex flex-col bg-gray-200 border-gray-300 p-3 rounded-md border h-[380px]"
         style={{ boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px" }}
@@ -51,7 +51,7 @@ const HomePosts = ({ post }) => {
             {post.desc.slice(0, 120)}...
             <span
               onClick={handleReadMore}
-              className="text-blue-600 cursor-pointer hover:underline"
+              className="text-blue-700  cursor-pointer hover:underline"
             >
               {" "}
               Read more
