@@ -90,7 +90,7 @@ const Navbar = () => {
           <h3>
             <Link
               to="/register"
-              className="text-xl font-bold hover:text-slate-50"
+              className="text-xl font-bold hover:text-slate-50 ml-2"
             >
               Register
             </Link>
