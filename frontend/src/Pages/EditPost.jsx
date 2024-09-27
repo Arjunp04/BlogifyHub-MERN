@@ -7,6 +7,7 @@ import { BACKEND_URL } from "../url";
 import { useNavigate, useParams } from "react-router-dom";
 import { UserContext } from "../Context/UserContext.jsx";
 import JoditEditor from "jodit-react"; // Import JoditEditor
+import categoriesData from "../data/categories.json"; 
 
 const EditPost = () => {
   const postId = useParams().id;
@@ -17,6 +18,7 @@ const EditPost = () => {
   const [file, setFile] = useState(null);
   const [cat, setCat] = useState("");
   const [cats, setCats] = useState([]);
+  const [availableCategories, setAvailableCategories] = useState([]); // State for available categories
   const [imagePreview, setImagePreview] = useState(null); // State for image preview
 
   const fetchPost = async () => {
@@ -29,6 +31,15 @@ const EditPost = () => {
       setImagePreview(
         res.data.photo ? BACKEND_URL + "/images/" + res.data.photo : null
       ); // Adjust the image preview URL if necessary
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const fetchCategories = async () => {
+    try {
+      const res = await axios.get(BACKEND_URL + "/api/categories"); // Endpoint for fetching categories
+      setAvailableCategories(res.data); // Set the available categories from the response
     } catch (err) {
       console.log(err);
     }
@@ -72,6 +83,7 @@ const EditPost = () => {
 
   useEffect(() => {
     fetchPost();
+    fetchCategories(); // Fetch categories when the component mounts
   }, [postId]);
 
   const deleteCategory = (i) => {
@@ -148,41 +160,44 @@ const EditPost = () => {
               </label>
             </div>
 
-            <div className="flex flex-col">
-              <div className="flex items-center space-x-4 md:space-x-8">
-                <input
-                  value={cat}
-                  onChange={(e) => setCat(e.target.value)}
-                  className="px-4 py-2 rounded-full border outline-none border-blue-400 focus:border-blue-500 w-full md:w-1/2 lg:w-[40%] xl:w-[30%]"
-                  placeholder="Enter post category"
-                  type="text"
-                />
-
-                <div
-                  onClick={addCategory}
-                  className="bg-gray-950 hover:bg-black text-white px-4 py-2 font-semibold cursor-pointer"
-                >
-                  Add
-                </div>
-              </div>
-
-              {/* Categories */}
-              <div className="flex px-4 mt-3">
-                {cats?.map((c, i) => (
-                  <div
-                    key={i}
-                    className="flex justify-center items-center space-x-2 mr-4 bg-gray-300 px-2 py-1 rounded-md"
-                  >
-                    <p>{c}</p>
-                    <p
-                      onClick={() => deleteCategory(i)}
-                      className="text-white bg-red-500 rounded-full cursor-pointer p-1 text-sm"
-                    >
-                      <ImCross size={8} />
-                    </p>
-                  </div>
+            {/* Select input for categories */}
+            <div className="flex space-x-5">
+              <select
+                value={cat}
+                onChange={(e) => setCat(e.target.value)}
+                className="px-4 py-2 rounded-full border outline-none border-blue-400 focus:border-blue-500 w-full md:w-1/2 lg:w-[40%] xl:w-[30%]"
+              >
+                <option value="">Select a category</option>
+                {categoriesData.map((category, index) => (
+                  <option key={index} value={category.name}>
+                    {category.name}
+                  </option>
                 ))}
+              </select>
+              <div
+                onClick={addCategory}
+                className="bg-gray-950 hover:bg-black text-white px-4 py-2 font-semibold cursor-pointer mt-2"
+              >
+                Add
               </div>
+            </div>
+
+            {/* Display selected categories */}
+            <div className="flex px-4 mt-3">
+              {cats?.map((c, i) => (
+                <div
+                  key={i}
+                  className="flex justify-center items-center space-x-2 mr-4 bg-gray-300 px-2 py-1 rounded-md"
+                >
+                  <p>{c}</p>
+                  <p
+                    onClick={() => deleteCategory(i)}
+                    className="text-white bg-red-500 rounded-full cursor-pointer p-1 text-sm"
+                  >
+                    <ImCross size={8} />
+                  </p>
+                </div>
+              ))}
             </div>
 
             {/* Jodit Editor for description */}
