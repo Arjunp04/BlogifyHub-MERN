@@ -2,7 +2,7 @@ import React from "react";
 import axios from "axios";
 import { MdDelete } from "react-icons/md";
 import { FiCalendar, FiClock } from "react-icons/fi"; // Calendar and clock icons
-import { URL } from "../url.js";
+import { BACKEND_URL } from "../url.js";
 import { useContext } from "react";
 import { UserContext } from "../Context/UserContext.jsx";
 
@@ -11,7 +11,7 @@ const Comment = ({ c, post }) => {
 
   const deleteComment = async (id) => {
     try {
-      await axios.delete(URL + "/api/comments/" + id, {
+      await axios.delete(BACKEND_URL + "/api/comments/" + id, {
         withCredentials: true,
       });
       window.location.reload();
