@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useContext, useState, useEffect } from "react";
 import axios from "axios";
-import { URL } from "../url.js";
+import { BACKEND_URL } from "../url.js";
 import { UserContext } from "../Context/UserContext";
 import { MdEmail, MdLock } from "react-icons/md";
 import login from "/login.svg";
@@ -27,7 +27,7 @@ const Login = () => {
     }
     try {
       const res = await axios.post(
-        URL + "/api/auth/login",
+        BACKEND_URL + "/api/auth/login",
         { email, password },
         { withCredentials: true }
       );

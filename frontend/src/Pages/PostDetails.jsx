@@ -5,7 +5,7 @@ import Navbar from "../Components/Navbar";
 import { BiEdit } from "react-icons/bi";
 import { MdDelete } from "react-icons/md";
 import axios from "axios";
-import { URL, IF } from "../url.js";
+import { BACKEND_URL, IF } from "../url.js";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../Context/UserContext";
 import Loader from "../Components/Loader";
@@ -23,7 +23,7 @@ const PostDetails = () => {
   const fetchPost = async () => {
     try {
       console.log("postId:", postId); // Log the postId for debugging
-      const res = await axios.get(URL + "/api/posts/" + postId);
+      const res = await axios.get(BACKEND_URL + "/api/posts/" + postId);
       console.log(res.data);
       setPost(res.data);
     } catch (err) {
@@ -33,7 +33,7 @@ const PostDetails = () => {
 
   const handleDeletePost = async () => {
     try {
-      const res = await axios.delete(URL + "/api/posts/" + postId, {
+      const res = await axios.delete(BACKEND_URL + "/api/posts/" + postId, {
         withCredentials: true,
       });
       console.log(res.data);
@@ -50,7 +50,7 @@ const PostDetails = () => {
   const fetchPostComments = async () => {
     setLoader(true);
     try {
-      const res = await axios.get(URL + "/api/comments/post/" + postId);
+      const res = await axios.get(BACKEND_URL + "/api/comments/post/" + postId);
       setComments(res.data);
       setLoader(false);
     } catch (err) {
@@ -67,7 +67,7 @@ const PostDetails = () => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        URL + "/api/comments/create",
+        BACKEND_URL + "/api/comments/create",
         {
           comment: comment,
           author: user.username,
@@ -83,6 +83,13 @@ const PostDetails = () => {
     } catch (err) {
       console.log(err);
     }
+  };
+
+  // Utility function to strip HTML tags
+  const stripHtmlTags = (html) => {
+    const tempDiv = document.createElement("div");
+    tempDiv.innerHTML = html;
+    return tempDiv.innerText || tempDiv.textContent || "";
   };
 
   return (
@@ -105,37 +112,49 @@ const PostDetails = () => {
               className="w-full max-w-md sm:max-w-3xl md:max-w-4xl lg:max-w-5xl h-[400px] max-h-[400px] mx-auto mt-5 md:mt-8"
               alt=""
             />
-            <div className="flex text-sm font-semibold text-gray-600 items-center space-x-3 mt-4 ">
-              <div className="flex items-center space-x-0.5">
-                <FiUser className="text-gray-600" />
-                <p>@{post.username}</p>
-              </div>
-              <div className="flex items-center space-x-2">
+            <div className="flex text-sm font-semibold text-gray-600 items-center mt-4 justify-between">
+              <div className="flex space-x-3">
                 <div className="flex items-center space-x-0.5">
-                  <FiCalendar className="text-gray-600" />
-                  <p>
-                    {new Date(post?.updatedAt).toLocaleDateString("en-GB", {
-                      day: "2-digit",
-                      month: "short",
-                      year: "numeric",
-                    })}
-                  </p>
+                  <FiUser className="text-gray-600" />
+                  <p>@{post.username}</p>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-0.5">
+                    <FiCalendar className="text-gray-600" />
+                    <p>
+                      {new Date(post?.updatedAt).toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      })}
+                    </p>
+                  </div>
                 </div>
               </div>
+
+              {user?._id === post?.userId && (
+                <div className="flex items-center justify-center -mt-2">
+                  <p
+                    className="cursor-pointer"
+                    onClick={() => navigate("/edit/" + postId)}
+                  >
+                    <BiEdit
+                      size={30}
+                      color="blue"
+                      className="hover:bg-black hover:bg-opacity-15 p-1 duration-200 rounded-full"
+                    />
+                  </p>
+                  <p className="cursor-pointer" onClick={handleDeletePost}>
+                    <MdDelete
+                      size={30}
+                      color="red"
+                      className="hover:bg-black hover:bg-opacity-15 p-1 duration-200 rounded-full"
+                    />
+                  </p>
+                </div>
+              )}
             </div>
-            {user?._id === post?.userId && (
-              <div className="flex items-center justify-center space-x-2">
-                <p
-                  className="cursor-pointer"
-                  onClick={() => navigate("/edit/" + postId)}
-                >
-                  <BiEdit />
-                </p>
-                <p className="cursor-pointer" onClick={handleDeletePost}>
-                  <MdDelete />
-                </p>
-              </div>
-            )}
+
             <div className="flex items-center mt-3 space-x-4 font-semibold ">
               <p>Categories:</p>
               <div className="flex justify-center items-center space-x-2">
@@ -149,7 +168,7 @@ const PostDetails = () => {
               </div>
             </div>
             <p className="mx-auto mt-4 bg-gray-100 py-2 px-4 rounded border border-gray-200">
-              {post.desc}
+              {stripHtmlTags(post.desc)} {/* Strip HTML tags here */}
             </p>
           </div>
 

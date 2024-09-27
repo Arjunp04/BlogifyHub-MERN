@@ -2,7 +2,7 @@ import React from "react";
 import { useContext } from "react";
 import { UserContext } from "../Context/UserContext.jsx";
 import axios from "axios";
-import { URL } from "../url.js";
+import { BACKEND_URL } from "../url.js";
 import { Link, useNavigate } from "react-router-dom";
 
 const Menu = () => {
@@ -12,7 +12,7 @@ const Menu = () => {
 
   const handleLogout = async () => {
     try {
-      const res = await axios.get(URL + "/api/auth/logout", {
+      const res = await axios.get(BACKEND_URL + "/api/auth/logout", {
         withCredentials: true,
       });
       // console.log(res)

@@ -10,6 +10,13 @@ const HomePosts = ({ post }) => {
     navigate(`/post/${post._id}`); // Navigate to /post/{post._id} when clicked
   };
 
+  // Utility function to strip HTML tags
+  const stripHtmlTags = (html) => {
+    const tempDiv = document.createElement("div");
+    tempDiv.innerHTML = html;
+    return tempDiv.innerText || tempDiv.textContent || "";
+  };
+
   return (
     <div className="w-full transition-all hover:scale-[1.02] duration-300">
       <div
@@ -27,7 +34,7 @@ const HomePosts = ({ post }) => {
         {/* Post Details */}
         <div className="flex flex-col flex-grow justify-between">
           <h1 className="text-xl font-bold md:mb-2 mt-1 md:text-xl">
-            {post.title.slice(0,34)}...
+            {post.title.slice(0, 34)}...
           </h1>
           <div className="flex text-sm font-semibold text-gray-500 items-center space-x-3 -mt-1">
             <div className="flex items-center space-x-0.5">
@@ -48,7 +55,7 @@ const HomePosts = ({ post }) => {
             </div>
           </div>
           <p className=" text-sm bg-gray-5 border bg-gray-100 text-gray-950 px-2 py-1 rounded-md my-2">
-            {post.desc.slice(0, 120)}...
+            {stripHtmlTags(post.desc.slice(0, 120))}...
             <span
               onClick={handleReadMore}
               className="text-blue-700  cursor-pointer hover:underline"

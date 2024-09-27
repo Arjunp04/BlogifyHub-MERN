@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { URL } from "../url.js";
+import { BACKEND_URL } from "../url.js";
 import { MdPerson, MdEmail, MdLock } from "react-icons/md";
 import register from "/login.svg";
 
@@ -26,7 +26,7 @@ const Register = () => {
       return;
     }
     try {
-      await axios.post(URL + "/api/auth/register", {
+      await axios.post(BACKEND_URL + "/api/auth/register", {
         username,
         email,
         password,
