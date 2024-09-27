@@ -7,13 +7,14 @@ import { BACKEND_URL } from "../url.js";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import JoditEditor from "jodit-react"; // Import JoditEditor
+import categoriesData from "../data/categories.json"; 
 
 const CreatePost = () => {
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState(""); // Keep this for the editor content
   const [file, setFile] = useState(null);
   const { user } = useContext(UserContext);
-  const [cat, setCat] = useState("");
+  const [cat, setCat] = useState(""); // Selected category
   const [cats, setCats] = useState([]);
   const [imagePreview, setImagePreview] = useState(null); // State for image preview
 
@@ -26,7 +27,7 @@ const CreatePost = () => {
   };
 
   const addCategory = () => {
-    if (cat) {
+    if (cat && !cats.includes(cat)) {
       let updatedCats = [...cats];
       updatedCats.push(cat);
       setCat("");
@@ -104,7 +105,7 @@ const CreatePost = () => {
             />
 
             {/* Custom Image Upload */}
-            <div className="flex flex-col md:w-1/2 lg:w-[40%]  xl:w-[30%]">
+            <div className="flex flex-col md:w-1/2 lg:w-[40%] xl:w-[30%]">
               <input
                 type="file"
                 id="file-input"
@@ -130,41 +131,45 @@ const CreatePost = () => {
               </label>
             </div>
 
-            <div className="flex flex-col">
-              <div className="flex items-center space-x-4 md:space-x-8">
-                <input
-                  value={cat}
-                  onChange={(e) => setCat(e.target.value)}
-                  className="px-4 py-2 rounded-full border outline-none border-blue-400 focus:border-blue-500 w-full md:w-1/2 lg:w-[40%]  xl:w-[30%]"
-                  placeholder="Enter post category"
-                  type="text"
-                />
-
-                <div
-                  onClick={addCategory}
-                  className="bg-gray-950 hover:bg-black text-white px-4 py-2 font-semibold cursor-pointer"
-                >
-                  Add
-                </div>
-              </div>
-
-              {/* Categories */}
-              <div className="flex px-4 mt-3">
-                {cats?.map((c, i) => (
-                  <div
-                    key={i}
-                    className="flex justify-center items-center space-x-2 mr-4 bg-gray-300 px-2 py-1 rounded-md"
-                  >
-                    <p>{c}</p>
-                    <p
-                      onClick={() => deleteCategory(i)}
-                      className="text-white bg-red-500 rounded-full cursor-pointer p-1 text-sm"
-                    >
-                      <ImCross size={8} />
-                    </p>
-                  </div>
+            {/* Category Selection */}
+            <div className="flex space-x-5">
+              <select
+                value={cat}
+                onChange={(e) => setCat(e.target.value)}
+                className="px-4 py-2 rounded-full border outline-none border-blue-400 focus:border-blue-500 w-full md:w-1/2 lg:w-[40%] xl:w-[30%]"
+              >
+                <option value="">Select a category</option>
+                {categoriesData.map((category) => (
+                  <option key={category.id} value={category.name}>
+                    {category.name}
+                  </option>
                 ))}
+              </select>
+
+              <div
+                onClick={addCategory}
+                className="bg-gray-950 hover:bg-black text-white px-4 py-2 font-semibold cursor-pointer mt-2"
+              >
+                Add
               </div>
+            </div>
+
+            {/* Categories */}
+            <div className="flex ">
+              {cats.map((c, i) => (
+                <div
+                  key={i}
+                  className="flex justify-center items-center space-x-2 mr-4 bg-gray-300 px-2 py-1 rounded-md"
+                >
+                  <p>{c}</p>
+                  <p
+                    onClick={() => deleteCategory(i)}
+                    className="text-white bg-red-500 rounded-full cursor-pointer p-1 text-sm"
+                  >
+                    <ImCross size={8} />
+                  </p>
+                </div>
+              ))}
             </div>
 
             {/* Jodit Editor for description */}
