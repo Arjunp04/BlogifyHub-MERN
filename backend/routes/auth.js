@@ -54,15 +54,42 @@ router.post("/login", async (req, res) => {
   }
 });
 
-//LOGOUT
-router.get("/logout", async (req, res) => {
+// Forgot Password Route
+router.post("/forgot-password", async (req, res) => {
+  const { email } = req.body;
+
   try {
-    res
-      .clearCookie("token", { sameSite: "none", secure: true })
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const token = jwt.sign({ id: user._id }, process.env.SECRET, {
+      expiresIn: "1h",
+    });
+    return res
       .status(200)
-      .send("User logged out successfully!");
+      .json({ token, message: "Reset link sent to your email." });
   } catch (err) {
-    res.status(500).json(err);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+// Reset Password Route
+router.post("/reset-password", async (req, res) => {
+  const { token, newPassword } = req.body;
+
+  try {
+    const decoded = jwt.verify(token, process.env.SECRET);
+    const userId = decoded.id;
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    await User.findByIdAndUpdate(userId, { password: hashedPassword });
+    res.status(200).json({ message: "Password has been reset successfully." });
+  } catch (err) {
+    res.status(500).json({ message: "Invalid or expired token." });
   }
 });
 
@@ -78,6 +105,18 @@ router.get("/refetch", (req, res) => {
     }
     res.status(200).json(data);
   });
+});
+
+//LOGOUT
+router.get("/logout", async (req, res) => {
+  try {
+    res
+      .clearCookie("token", { sameSite: "none", secure: true })
+      .status(200)
+      .send("User logged out successfully!");
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
 export default router;
