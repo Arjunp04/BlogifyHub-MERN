@@ -92,6 +92,10 @@ const Login = () => {
                 required
               />
             </div>
+
+            <p className="text-[#0f2be3]  text-sm text-right -mt-3 mb-3 hover:underline font-medium">
+              <Link to="/forgot-password">Forgot Password ?</Link>
+            </p>
             <button
               type="submit"
               className="w-full px-4 py-3 text-xl font-bold text-white bg-[#0018b7] rounded-lg hover:bg-blue-700 transition duration-200"
