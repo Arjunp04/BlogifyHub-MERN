@@ -40,16 +40,14 @@ router.delete("/:id", verifyToken, async (req, res) => {
 //get post details
 router.get("/:id", async (req, res) => {
   try {
-
     console.log("Fetching post details for postId:", req.params.id);
     const post = await Post.findById(req.params.id);
-    
+
     if (!post) {
       console.log("Post not found:", req.params.id);
       return res.status(404).json({ error: "Post not found" });
     }
     res.status(200).json(post);
-   
   } catch (err) {
     console.error("Error fetching post details:", err);
     res.status(500).json(err);
@@ -80,6 +78,36 @@ router.get("/user/:userId", async (req, res) => {
     res.status(200).json(posts);
   } catch (err) {
     res.status(500).json(err);
+  }
+});
+
+// posts like and unlike
+router.post("/:postId/like", verifyToken, async (req, res) => {
+  const postId = req.params.postId;
+  const userId = req.userId;
+
+  console.log("Post ID:", postId); // Log the post ID
+  console.log("User ID:", userId); // Log the user ID
+
+  try {
+    const post = await Post.findById(postId);
+    if (!post)
+      return res.status(404).json({
+        message: "Post not found",
+      });
+
+    if (post.likes.includes(userId)) {
+      post.likes = post.likes.filter((id) => id !== userId);
+      await post.save();
+      return res.status(200).json({ message: "Post unliked", post });
+    } else {
+      post.likes.push(userId);
+      await post.save();
+      return res.status(200).json({ message: "Post liked", post });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
   }
 });
 
