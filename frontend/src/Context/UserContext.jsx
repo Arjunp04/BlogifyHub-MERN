@@ -16,9 +16,6 @@ export function UserContextProvider({ children }) {
       const res = await axios.get(BACKEND_URL + "/api/auth/refetch", {
         withCredentials: true,
       });
-      console.log("***************");
-      console.log(res)
-      setUser(res.data);
     } catch (err) {
       if (err.response && err.response.status === 404) {
         // Handle 404 error (resource not found)

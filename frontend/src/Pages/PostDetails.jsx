@@ -10,6 +10,7 @@ import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../Context/UserContext";
 import Loader from "../Components/Loader";
 import { FiCalendar, FiUser } from "react-icons/fi";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
 
 const PostDetails = () => {
   const postId = useParams().id;
@@ -18,14 +19,16 @@ const PostDetails = () => {
   const [comments, setComments] = useState([]);
   const [comment, setComment] = useState("");
   const [loader, setLoader] = useState(false);
+  const [likesCount, setLikesCount] = useState(0); // Track the total likes
+  const [isPostLiked, setIsPostLiked] = useState(false); // Track if the user liked the post
   const navigate = useNavigate();
 
   const fetchPost = async () => {
     try {
-      console.log("postId:", postId); // Log the postId for debugging
       const res = await axios.get(BACKEND_URL + "/api/posts/" + postId);
-      console.log(res.data);
       setPost(res.data);
+      setLikesCount(res.data.likes.length); // Initialize likes count
+      setIsPostLiked(res.data.likes.includes(user?._id)); // Check if user has liked the post
     } catch (err) {
       console.log(err);
     }
@@ -36,7 +39,6 @@ const PostDetails = () => {
       const res = await axios.delete(BACKEND_URL + "/api/posts/" + postId, {
         withCredentials: true,
       });
-      console.log(res.data);
       navigate("/");
     } catch (err) {
       console.log(err);
@@ -66,7 +68,7 @@ const PostDetails = () => {
   const postComment = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post(
+      await axios.post(
         BACKEND_URL + "/api/comments/create",
         {
           comment: comment,
@@ -77,9 +79,22 @@ const PostDetails = () => {
         { withCredentials: true }
       );
 
-      // fetchPostComments()
-      // setComment("")
       window.location.reload(true);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // Handle Like/Unlike functionality
+  const handleLikes = async () => {
+    try {
+      const res = await axios.post(
+        BACKEND_URL + `/api/posts/${postId}/like`,
+        {},
+        { withCredentials: true }
+      );
+      setLikesCount(res.data.post.likes.length); // Update likes count
+      setIsPostLiked(res.data.post.likes.includes(user._id)); // Check if user has liked the post
     } catch (err) {
       console.log(err);
     }
@@ -100,9 +115,9 @@ const PostDetails = () => {
           <Loader />
         </div>
       ) : (
-        <div className="px-4 sm:px-8 md:px-12 max-w-screen-xl  mx-auto mt-10 mb-16">
+        <div className="px-4 sm:px-8 md:px-12 max-w-screen-xl mx-auto mt-10 mb-16">
           <div className="flex justify-center items-center">
-            <h1 className="text-2xl font-bold text-black sm:text-3xl md:text-4xl ">
+            <h1 className="text-2xl font-bold text-black sm:text-3xl md:text-4xl">
               {post.title}
             </h1>
           </div>
@@ -113,22 +128,40 @@ const PostDetails = () => {
               alt=""
             />
             <div className="flex text-sm font-semibold text-gray-600 items-center mt-4 justify-between">
-              <div className="flex space-x-3">
-                <div className="flex items-center space-x-0.5">
-                  <FiUser className="text-gray-600" />
-                  <p>@{post.username}</p>
-                </div>
-                <div className="flex items-center space-x-2">
+              <div className="flex justify-between text-sm font-semibold text-gray-500 items-center md:-mt-1">
+                <div className="flex space-x-3">
                   <div className="flex items-center space-x-0.5">
-                    <FiCalendar className="text-gray-600" />
-                    <p>
-                      {new Date(post?.updatedAt).toLocaleDateString("en-GB", {
-                        day: "2-digit",
-                        month: "short",
-                        year: "numeric",
-                      })}
-                    </p>
+                    <FiUser className="text-gray-600" />
+                    <p>@{post.username}</p>
                   </div>
+                  <div className="flex items-center space-x-2">
+                    <div className="flex items-center space-x-0.5">
+                      <FiCalendar className="text-gray-600" />
+                      <p>
+                        {new Date(post?.createdAt).toLocaleDateString("en-GB", {
+                          day: "2-digit",
+                          month: "short",
+                          year: "numeric",
+                        })}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="ml-2 mr-2 flex items-center">
+                  {isPostLiked ? (
+                    <FaHeart
+                      size={18}
+                      className="text-red-600 cursor-pointer"
+                      onClick={handleLikes}
+                    />
+                  ) : (
+                    <FaRegHeart
+                      size={18}
+                      className="text-gray-600 cursor-pointer"
+                      onClick={handleLikes}
+                    />
+                  )}
+                  <span className="ml-1 text-sm">{likesCount}</span>
                 </div>
               </div>
 
@@ -159,11 +192,9 @@ const PostDetails = () => {
               <p>Categories:</p>
               <div className="flex justify-center items-center space-x-2">
                 {post.categories?.map((c, i) => (
-                  <>
-                    <div key={i} className="bg-gray-300 rounded-lg px-3 py-1">
-                      {c}
-                    </div>
-                  </>
+                  <div key={i} className="bg-gray-300 rounded-lg px-3 py-1">
+                    {c}
+                  </div>
                 ))}
               </div>
             </div>
@@ -185,13 +216,13 @@ const PostDetails = () => {
               onChange={(e) => setComment(e.target.value)}
               type="text"
               placeholder="Write a comment"
-              className="md:w-[80%]  py-2 px-4 mt-4 bg-gray-50 border border-gray-400 rounded-full md:mt-0 focus:outline-none focus:border-blue-700"
+              className="md:w-[80%] py-2 px-4 mt-4 bg-gray-50 border border-gray-400 rounded-full md:mt-0 focus:outline-none focus:border-blue-700"
             />
             <button
               onClick={postComment}
               className="bg-gray-900 rounded-full hover:bg-black text-sm text-white px-2 py-2 md:w-[20%] mt-4 md:mt-0"
             >
-              Add Comment
+              Post
             </button>
           </div>
         </div>
