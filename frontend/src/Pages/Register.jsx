@@ -48,9 +48,11 @@ const Register = () => {
           }`}
           style={{ boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px" }}
         >
-          <h1 className="text-4xl font-bold text-center mb-6 text-[#0018b7]">
-            BlogifyHub
-          </h1>
+          <Link to="/">
+            <h1 className="text-4xl font-bold text-center mb-6 text-[#0018b7]">
+              BlogifyHub
+            </h1>
+          </Link>
 
           <p className="text-center text-gray-600 mb-10">
             Join BlogifyHub today to become part of a vibrant community of

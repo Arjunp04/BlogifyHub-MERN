@@ -57,9 +57,12 @@ const Login = () => {
           }`}
           style={{ boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px" }}
         >
-          <h1 className="text-4xl font-bold text-center mb-10 text-[#0018b7]">
-            BlogifyHub
-          </h1>
+          <Link to="/">
+            <h1 className="text-4xl font-bold text-center mb-10 text-[#0018b7]">
+              BlogifyHub
+            </h1>
+          </Link>
+
           <h1 className="text-lg font-medium text-center mb-10 text-gray-800">
             Please enter your details to sign in
           </h1>

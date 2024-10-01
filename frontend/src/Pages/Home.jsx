@@ -52,7 +52,16 @@ const Home = () => {
         ) : Array.isArray(posts) && posts.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {posts.map((post) => (
-              <Link to={user ? `/post/${post._id}` : "/login"} key={post._id}>
+              <Link
+                to={user ? `/post/${post._id}` : "/login"}
+                key={post._id}
+                onClick={(event) => {
+                  // Prevent navigation if the click originated from the like button
+                  if (event.target.closest(".like-icon")) {
+                    event.preventDefault(); // Prevent navigation
+                  }
+                }}
+              >
                 <HomePosts post={post} />
               </Link>
             ))}
