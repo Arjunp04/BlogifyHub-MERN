@@ -28,6 +28,10 @@ const PostSchema = new mongoose.Schema(
     categories: {
       type: Array,
     },
+    likes: {
+      type: [String], // Array of userIds who liked the post
+      default: [],
+    },
   },
   { timestamps: true }
 );
