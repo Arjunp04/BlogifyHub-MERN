@@ -2,28 +2,87 @@ import express from "express";
 const router = express.Router();
 import Post from "../models/Post.js";
 import Comment from "../models/Comment.js";
-import verifyToken from "../verifyToken.js";
+import verifyToken from "../middlewares/verifyToken.js";
+import upload from "../middlewares/multer.js";
+import cloudinary from "../config/cloudinary.js";
 
-router.post("/create", verifyToken, async (req, res) => {
+// Create a post with image upload
+router.post("/create", verifyToken, upload.single("file"), async (req, res) => {
   try {
-    const newPost = new Post(req.body);
-    const savedPost = await newPost.save();
-    res.status(200).json(savedPost);
+    const file = req.file; // Access the uploaded file buffer
+
+    // Check if a file was uploaded
+    if (!file) {
+      return res.status(400).json({ message: "No file uploaded" });
+    }
+
+    // Upload image to Cloudinary using the buffer
+    const uploadResult =  cloudinary.uploader.upload_stream(
+      { folder: "blogifuhub/blog posts" },
+      (error, result) => {
+        if (error) {
+          return res.status(500).json({ message: "Error uploading to Cloudinary", error });
+        }
+
+        // Create new post with image URL
+        const newPost = new Post({
+          ...req.body,
+          photo: result.secure_url,
+        });
+
+        // Save the post to the database
+        newPost.save()
+          .then(savedPost => res.status(200).json(savedPost))
+          .catch(err => res.status(500).json({ message: "Error saving post", error: err.message }));
+      }
+    ).end(file.buffer); // Pass the buffer to upload_stream
+
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json({ message: "Error uploading post", error: err.message });
   }
 });
 
-router.put("/:id", verifyToken, async (req, res) => {
+// Update a post with image upload
+router.put("/:id", verifyToken, upload.single("file"), async (req, res) => {
   try {
-    const updatedPost = await Post.findByIdAndUpdate(
-      req.params.id,
-      { $set: req.body },
-      { new: true }
-    );
-    res.status(200).json(updatedPost);
+    const file = req.file;
+    let updateData = { ...req.body };
+
+    if (file) {
+      // If a new file is uploaded, upload to Cloudinary using the buffer
+      cloudinary.uploader.upload_stream(
+        { folder: "blogifuhub/blog posts" },
+        async (error, result) => {
+          if (error) {
+            return res.status(500).json({ message: "Error uploading to Cloudinary", error });
+          }
+
+          // Update with the new image URL
+          updateData.photo = result.secure_url; // Update the field with the new image URL
+
+          try {
+            const updatedPost = await Post.findByIdAndUpdate(
+              req.params.id,
+              { $set: updateData },
+              { new: true }
+            );
+            return res.status(200).json(updatedPost);
+          } catch (err) {
+            return res.status(500).json({ message: "Error updating post", error: err.message });
+          }
+        }
+      ).end(file.buffer); // Pass the buffer to upload_stream
+    } else {
+      // If no new file is uploaded, update the post without changing the image
+      const updatedPost = await Post.findByIdAndUpdate(
+        req.params.id,
+        { $set: updateData },
+        { new: true }
+      );
+      return res.status(200).json(updatedPost);
+    }
   } catch (err) {
-    res.status(500).json(err);
+    return res.status(500).json({ message: "Error updating post", error: err.message });
   }
 });
 
@@ -85,9 +144,6 @@ router.get("/user/:userId", async (req, res) => {
 router.post("/:postId/like", verifyToken, async (req, res) => {
   const postId = req.params.postId;
   const userId = req.userId;
-
-  console.log("Post ID:", postId); // Log the post ID
-  console.log("User ID:", userId); // Log the user ID
 
   try {
     const post = await Post.findById(postId);

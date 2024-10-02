@@ -15,7 +15,7 @@ const verifyToken = (req, res, next) => {
     // Use the JWT directly from the cookies
     jwt.verify(token, process.env.SECRET, {}, async (err, data) => {
       if (err) {
-        return res.status(403).json("Token is not valid!");
+        return res.status(403).json("Token is not va    lid!");
       }
 
       req.userId = data._id;
