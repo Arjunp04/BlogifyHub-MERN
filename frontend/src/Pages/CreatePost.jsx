@@ -7,16 +7,17 @@ import { BACKEND_URL } from "../url.js";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import JoditEditor from "jodit-react"; // Import JoditEditor
-import categoriesData from "../data/categories.json"; 
+import categoriesData from "../data/categories.json";
 
 const CreatePost = () => {
   const [title, setTitle] = useState("");
-  const [desc, setDesc] = useState(""); // Keep this for the editor content
+  const [desc, setDesc] = useState(""); // Editor content
   const [file, setFile] = useState(null);
   const { user } = useContext(UserContext);
   const [cat, setCat] = useState(""); // Selected category
   const [cats, setCats] = useState([]);
-  const [imagePreview, setImagePreview] = useState(null); // State for image preview
+  const [imagePreview, setImagePreview] = useState(null); // Image preview state
+  const [loading, setLoading] = useState(false); // For loading state
 
   const navigate = useNavigate();
 
@@ -39,44 +40,38 @@ const CreatePost = () => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
       setFile(selectedFile);
-      console.log(selectedFile);
       setImagePreview(URL.createObjectURL(selectedFile)); // Create image preview
     }
   };
 
   const handleCreate = async (e) => {
     e.preventDefault();
-    const post = {
+    setLoading(true); // Set loading state when API call begins
+
+    const postData = {
       title,
       desc,
       username: user.username,
       userId: user._id,
       categories: cats,
+      file: file, // Include file in post data
     };
 
-    if (file) {
-      const data = new FormData();
-      const filename = Date.now() + file.name;
-      data.append("img", filename);
-      data.append("file", file);
-      post.photo = filename;
-
-      // Image upload
-      try {
-        await axios.post(BACKEND_URL + "/api/upload", data);
-      } catch (err) {
-        console.log("img upload error", err);
-      }
+    const data = new FormData();
+    for (const key in postData) {
+      data.append(key, postData[key]);
     }
 
     // Post upload
     try {
-      const res = await axios.post(BACKEND_URL + "/api/posts/create", post, {
+      const res = await axios.post(`${BACKEND_URL}/api/posts/create`, data, {
         withCredentials: true,
       });
+      setLoading(false); // Turn off loading once done
       navigate("/post/" + res.data._id);
     } catch (err) {
-      console.log(err);
+      console.log("Error uploading post:", err);
+      setLoading(false);
     }
   };
 
@@ -96,15 +91,20 @@ const CreatePost = () => {
             thoughts, experiences, or insights with the world. Please fill in
             the form below with the details of your blog post:
           </p>
-          <form className="w-full flex flex-col space-y-4 md:space-y-8 mt-4">
+          <form
+            className="w-full flex flex-col space-y-4 md:space-y-8 mt-4"
+            onSubmit={handleCreate}
+          >
             <input
+              value={title}
               onChange={(e) => setTitle(e.target.value)}
               type="text"
               placeholder="Enter post title"
               className="px-4 py-2 rounded-full border outline-none border-blue-400 focus:border-blue-500"
+              required
             />
 
-            {/* Custom Image Upload */}
+            {/* Image Upload */}
             <div className="flex flex-col md:w-1/2 lg:w-[40%] xl:w-[30%]">
               <input
                 type="file"
@@ -155,7 +155,7 @@ const CreatePost = () => {
             </div>
 
             {/* Categories */}
-            <div className="flex ">
+            <div className="flex flex-wrap">
               {cats.map((c, i) => (
                 <div
                   key={i}
@@ -175,14 +175,16 @@ const CreatePost = () => {
             {/* Jodit Editor for description */}
             <JoditEditor
               value={desc}
-              onChange={(newContent) => setDesc(newContent)} // Update state on content change
+              onChange={(newContent) => setDesc(newContent)}
+              required
             />
 
             <button
-              onClick={handleCreate}
+              type="submit"
               className="bg-black w-full md:w-[20%] mx-auto text-white font-semibold px-4 py-2 md:text-xl text-lg border-2 hover:bg-gray-950 rounded transition-all duration-300"
+              disabled={loading}
             >
-              Create
+              {loading ? "Creating..." : "Create"}
             </button>
           </form>
         </div>
@@ -193,3 +195,4 @@ const CreatePost = () => {
 };
 
 export default CreatePost;
+

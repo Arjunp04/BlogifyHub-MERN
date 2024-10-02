@@ -2,7 +2,7 @@ import axios from "axios";
 import Footer from "../Components/Footer";
 import HomePosts from "../Components/HomePosts";
 import Navbar from "../Components/Navbar";
-import { IF, BACKEND_URL } from "../url.js";
+import { BACKEND_URL } from "../url.js";
 import { useContext, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Loader from "../Components/Loader.jsx";
@@ -21,7 +21,6 @@ const Home = () => {
     setLoader(true);
     try {
       const res = await axios.get(BACKEND_URL + "/api/posts/" + search);
-      // console.log(res.data)
       setPosts(res.data);
       if (res?.data?.length === 0) {
         setNoResults(true);
