@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { IF } from "../url.js";
 import { useNavigate } from "react-router-dom";
 
 const ProfilePosts = ({ p }) => {
@@ -39,16 +38,16 @@ const ProfilePosts = ({ p }) => {
         {/* left */}
         <div className="w-[30%] h-[150px] flex justify-center items-center">
           <img
-            src={IF + p.photo}
+            src={p?.photo}
             alt=""
             className="h-full w-full object-cover border shrink-0 border-gray-400 rounded-lg"
           />
         </div>
         {/* right */}
         <div className="flex flex-col w-[70%]">
-          <h1 className="text-xl font-bold mb-1 md:text-2xl">{p.title}</h1>
+          <h1 className="text-xl font-bold mb-1 md:text-2xl">{p?.title}</h1>
           <div className="flex text-sm font-semibold text-gray-500 items-center justify-between">
-            <p>@{p.username}</p>
+            <p>@{p?.username}</p>
             <div className="flex space-x-2">
               <p>
                 {new Date(p?.updatedAt).toLocaleDateString("en-GB", {
