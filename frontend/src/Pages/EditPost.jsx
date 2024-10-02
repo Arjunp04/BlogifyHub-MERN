@@ -7,7 +7,7 @@ import { BACKEND_URL } from "../url";
 import { useNavigate, useParams } from "react-router-dom";
 import { UserContext } from "../Context/UserContext.jsx";
 import JoditEditor from "jodit-react"; // Import JoditEditor
-import categoriesData from "../data/categories.json"; 
+import categoriesData from "../data/categories.json";
 
 const EditPost = () => {
   const postId = useParams().id;
@@ -20,17 +20,19 @@ const EditPost = () => {
   const [cats, setCats] = useState([]);
   const [availableCategories, setAvailableCategories] = useState([]); // State for available categories
   const [imagePreview, setImagePreview] = useState(null); // State for image preview
+  const [loading, setLoading] = useState(false);
 
   const fetchPost = async () => {
     try {
+      
       const res = await axios.get(BACKEND_URL + "/api/posts/" + postId);
       setTitle(res.data.title);
       setDesc(res.data.desc);
       setFile(res.data.photo);
       setCats(res.data.categories);
       setImagePreview(
-        res.data.photo ? BACKEND_URL + "/images/" + res.data.photo : null
-      ); // Adjust the image preview URL if necessary
+        res.data.photo ? res.data.photo : null // Adjust the image preview URL if necessary
+      );
     } catch (err) {
       console.log(err);
     }
@@ -46,6 +48,7 @@ const EditPost = () => {
   };
 
   const handleUpdate = async (e) => {
+    setLoading(true);
     e.preventDefault();
     const post = {
       title,
@@ -55,29 +58,35 @@ const EditPost = () => {
       categories: cats,
     };
 
-    if (file) {
-      const data = new FormData();
-      const filename = Date.now() + file.name;
-      data.append("img", filename);
-      data.append("file", file);
-      post.photo = filename;
+    const formData = new FormData();
+    // Append post details to form data
+    for (const key in post) {
+      formData.append(key, post[key]);
+    }
 
-      // Image upload
-      try {
-        await axios.post(BACKEND_URL + "/api/upload", data);
-      } catch (err) {
-        console.log("img upload error", err);
-      }
+    if (file) {
+      const filename = Date.now() + file.name; // Generate a unique filename
+      formData.append("file", file);
+      post.photo = filename; // Add filename to post object
     }
 
     // Post update
     try {
-      const res = await axios.put(BACKEND_URL + "/api/posts/" + postId, post, {
-        withCredentials: true,
-      });
+      const res = await axios.put(
+        BACKEND_URL + "/api/posts/" + postId,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data", // Set content type for FormData
+          },
+          withCredentials: true,
+        }
+      );
       navigate("/post/" + res.data._id);
+      setLoading(false);
     } catch (err) {
       console.log(err);
+      setLoading(false)
     }
   };
 
@@ -118,7 +127,10 @@ const EditPost = () => {
           <h1 className="font-bold md:text-2xl text-xl">
             Update your Blog Post
           </h1>
-          <form className="w-full flex flex-col space-y-4 md:space-y-8 mt-4">
+          <form
+            className="w-full flex flex-col space-y-4 md:space-y-8 mt-4"
+            onSubmit={handleUpdate}
+          >
             <input
               onChange={(e) => setTitle(e.target.value)}
               value={title}
@@ -207,10 +219,10 @@ const EditPost = () => {
             />
 
             <button
-              onClick={handleUpdate}
+              type="submit" // Ensure this button submits the form
               className="bg-black w-full md:w-[20%] mx-auto text-white font-semibold px-4 py-2 md:text-xl text-lg border-2 hover:bg-gray-950 rounded transition-all duration-300"
             >
-              Update
+              {loading ? "Updating..." : "Update"}
             </button>
           </form>
 

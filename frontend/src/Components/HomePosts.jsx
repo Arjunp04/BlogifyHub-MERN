@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { BACKEND_URL, IF } from "../url.js";
+import { BACKEND_URL } from "../url.js";
 import { FiUser, FiCalendar } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
@@ -47,7 +47,7 @@ const HomePosts = ({ post }) => {
           withCredentials: true,
         }
       );
-      console.log(response.data);
+      // console.log(response.data);
     } catch (error) {
       console.log("Error liking/unliking post:", error);
       setIsPostLiked((prev) => !prev);
@@ -63,7 +63,7 @@ const HomePosts = ({ post }) => {
       >
         <div className="w-full h-[200px] sm:h-[220px] max-h-[220px] flex justify-center items-center">
           <img
-            src={IF + post.photo}
+            src={ post?.photo}
             alt="blog's image title"
             className="h-full w-full border border-gray-300 rounded-lg bg-yellow-600 shrink-0"
           />

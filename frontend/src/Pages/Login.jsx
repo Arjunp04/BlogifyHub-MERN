@@ -31,7 +31,6 @@ const Login = () => {
         { email, password },
         { withCredentials: true }
       );
-      console.log(res);
       setUser(res.data);
       navigate("/");
     } catch (err) {

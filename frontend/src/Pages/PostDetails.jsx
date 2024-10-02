@@ -5,7 +5,7 @@ import Navbar from "../Components/Navbar";
 import { BiEdit } from "react-icons/bi";
 import { MdDelete } from "react-icons/md";
 import axios from "axios";
-import { BACKEND_URL, IF } from "../url.js";
+import { BACKEND_URL } from "../url.js";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../Context/UserContext";
 import Loader from "../Components/Loader";
@@ -16,6 +16,7 @@ const PostDetails = () => {
   const postId = useParams().id;
   const [post, setPost] = useState({});
   const { user } = useContext(UserContext);
+  console.log(user)
   const [comments, setComments] = useState([]);
   const [comment, setComment] = useState("");
   const [loader, setLoader] = useState(false);
@@ -123,7 +124,7 @@ const PostDetails = () => {
           </div>
           <div className="w-full max-w-md sm:max-w-3xl md:max-w-4xl lg:max-w-5xl mx-auto">
             <img
-              src={IF + post.photo}
+              src={post?.photo}
               className="w-full max-w-md sm:max-w-3xl md:max-w-4xl lg:max-w-5xl h-[400px] max-h-[400px] mx-auto mt-5 md:mt-8"
               alt=""
             />
