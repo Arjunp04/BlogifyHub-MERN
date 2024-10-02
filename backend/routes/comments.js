@@ -1,7 +1,7 @@
 import express from "express";
 const router = express.Router();
-import Comment from "../models/Comment.js"; 
-import verifyToken from "../verifyToken.js";
+import Comment from "../models/Comment.js";
+import verifyToken from "../middlewares/verifyToken.js";
 
 //CREATE
 router.post("/create", verifyToken, async (req, res) => {
