@@ -7,6 +7,8 @@ import { useContext, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Loader from "../Components/Loader.jsx";
 import { UserContext } from "../Context/UserContext";
+import Banner from "../Components/Banner.jsx";
+import Filters from "../Components/AllFilters.jsx";
 
 const Home = () => {
   const { search } = useLocation();
@@ -41,6 +43,8 @@ const Home = () => {
   return (
     <>
       <Navbar />
+      <Banner />
+      <Filters/>
       <div className="max-w-screen-xl mx-auto min-h-screen px-4 md:px-6 mt-10 mb-20">
         {loader ? (
           <div className="h-[40vh] flex justify-center items-center">
