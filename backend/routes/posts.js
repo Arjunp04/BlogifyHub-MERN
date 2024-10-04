@@ -113,23 +113,6 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-//get all postsand search for the post
-router.get("/", async (req, res) => {
-  const query = req.query;
-
-  try {
-    const searchFilter = {
-      title: { $regex: query.search, $options: "i" },
-    };
-
-    const posts = await Post.find(query.search ? searchFilter : null);
-
-    res.status(200).json(posts);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
 //get user posts
 router.get("/user/:userId", async (req, res) => {
   try {
