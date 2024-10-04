@@ -7,7 +7,7 @@ import { BACKEND_URL } from "../url";
 import { useNavigate, useParams } from "react-router-dom";
 import { UserContext } from "../Context/UserContext.jsx";
 import JoditEditor from "jodit-react"; // Import JoditEditor
-import categoriesData from "../data/categories.json";
+import useFetchCategories from "../hooks/UseFetchCategories.js"; // Custom Hook
 
 const EditPost = () => {
   const postId = useParams().id;
@@ -18,9 +18,10 @@ const EditPost = () => {
   const [file, setFile] = useState(null);
   const [cat, setCat] = useState("");
   const [cats, setCats] = useState([]);
-  const [availableCategories, setAvailableCategories] = useState([]); // State for available categories
   const [imagePreview, setImagePreview] = useState(null); // State for image preview
   const [loading, setLoading] = useState(false);
+    const { categoriesList } = useFetchCategories();
+
 
   const fetchPost = async () => {
     try {
@@ -34,16 +35,7 @@ const EditPost = () => {
         res.data.photo ? res.data.photo : null // Adjust the image preview URL if necessary
       );
     } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const fetchCategories = async () => {
-    try {
-      const res = await axios.get(BACKEND_URL + "/api/categories"); // Endpoint for fetching categories
-      setAvailableCategories(res.data); // Set the available categories from the response
-    } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 
@@ -85,15 +77,10 @@ const EditPost = () => {
       navigate("/post/" + res.data._id);
       setLoading(false);
     } catch (err) {
-      console.log(err);
+      // console.log(err);
       setLoading(false)
     }
   };
-
-  useEffect(() => {
-    fetchPost();
-    fetchCategories(); // Fetch categories when the component mounts
-  }, [postId]);
 
   const deleteCategory = (i) => {
     let updatedCats = [...cats];
@@ -180,7 +167,7 @@ const EditPost = () => {
                 className="px-4 py-2 rounded-full border outline-none border-blue-400 focus:border-blue-500 w-full md:w-1/2 lg:w-[40%] xl:w-[30%]"
               >
                 <option value="">Select a category</option>
-                {categoriesData.map((category, index) => (
+                {categoriesList.map((category, index) => (
                   <option key={index} value={category.name}>
                     {category.name}
                   </option>

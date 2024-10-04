@@ -7,7 +7,7 @@ const Banner = () => {
       <img
         src={banner}
         alt="banner"
-        className="w-full h-full bg-red-400 mt-10 rounded-xl"
+        className="w-full h-full mt-10 rounded-xl"
         style={{ boxShadow: "rgba(0, 0, 0, 0.7) 0px 5px 10px" }}
       />
     </div>

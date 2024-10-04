@@ -7,7 +7,7 @@ import { BACKEND_URL } from "../url.js";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import JoditEditor from "jodit-react"; // Import JoditEditor
-import categoriesData from "../data/categories.json";
+import useFetchCategories from "../hooks/UseFetchCategories.js"; // Custom Hook
 
 const CreatePost = () => {
   const [title, setTitle] = useState("");
@@ -18,6 +18,7 @@ const CreatePost = () => {
   const [cats, setCats] = useState([]);
   const [imagePreview, setImagePreview] = useState(null); // Image preview state
   const [loading, setLoading] = useState(false); // For loading state
+  const { categoriesList } = useFetchCategories();
 
   const navigate = useNavigate();
 
@@ -70,7 +71,7 @@ const CreatePost = () => {
       setLoading(false); // Turn off loading once done
       navigate("/post/" + res.data._id);
     } catch (err) {
-      console.log("Error uploading post:", err);
+      // console.log("Error uploading post:", err);
       setLoading(false);
     }
   };
@@ -139,8 +140,8 @@ const CreatePost = () => {
                 className="px-4 py-2 rounded-full border outline-none border-blue-400 focus:border-blue-500 w-full md:w-1/2 lg:w-[40%] xl:w-[30%]"
               >
                 <option value="">Select a category</option>
-                {categoriesData.map((category) => (
-                  <option key={category.id} value={category.name}>
+                {categoriesList.map((category, index) => (
+                  <option key={index} value={category.name}>
                     {category.name}
                   </option>
                 ))}
@@ -195,4 +196,3 @@ const CreatePost = () => {
 };
 
 export default CreatePost;
-
