@@ -8,6 +8,7 @@ import authRoute from "./routes/auth.js";
 import userRoute from "./routes/users.js";
 import postRoute from "./routes/posts.js";
 import commentRoute from "./routes/comments.js";
+import filtersRoute from "./routes/filters.js";
 
 dotenv.config();
 
@@ -27,10 +28,11 @@ app.use("/api/auth", authRoute);
 app.use("/api/users", userRoute);
 app.use("/api/posts", postRoute);
 app.use("/api/comments", commentRoute);
+app.use("/api/filter", filtersRoute);
 
 // Start the server
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
   connectDB();
-  console.log(`Server running on port ${port}`);
+  // console.log(`Server running on port ${port}`);
 });
