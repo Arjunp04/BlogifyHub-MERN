@@ -1,2 +1,16 @@
 # BlogifyHub-MERN
  
+![blog1](https://github.com/user-attachments/assets/62a59a7d-ade1-48b8-9c93-dac1f754c38e)
+![login](https://github.com/user-attachments/assets/0c9efe2e-27a3-443a-869c-716dac7b9764)
+![register](https://github.com/user-attachments/assets/776eae5c-f4cf-441f-aded-ee201a152a01)
+![blog2](https://github.com/user-attachments/assets/d44b3fcf-352f-4a2f-ba3c-7dd1d7a50452)
+![blog post ](https://github.com/user-attachments/assets/32561fa5-7c96-4699-8db8-ff94da9dae3c)
+![login](https://github.com/user-attachments/assets/232a6fce-f645-4099-be75-0c5cb413a3d7)
+![create blog post ui](https://github.com/user-attachments/assets/30ee364b-7cac-41c3-b7f4-8fcc6a05f496)
+![register](https://github.com/user-attachments/assets/d8b2aa9a-dd47-4087-afbd-827704c333a2)
+![profile page](https://github.com/user-attachments/assets/d9991fd3-4fd1-496b-9c25-9fcf8a0be5af)
+![blog post ](https://github.com/user-attachments/assets/63671d8a-9e8d-4df5-9f05-0bc878eb7ff2)
+![create blog post ui](https://github.com/user-attachments/assets/e170c98f-8562-488b-8433-5318511f7b03)
+![blog1](https://github.com/user-attachments/assets/d0adf1af-d359-46fd-b98d-8070d252a8e0)
+![profile page](https://github.com/user-attachments/assets/06368f47-2d97-46d0-b94d-fbbb7515c875)
+![blog2](https://github.com/user-attachments/assets/60355333-901c-46a9-a513-18f0b571eeff)
