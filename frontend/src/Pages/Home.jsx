@@ -85,7 +85,7 @@ const Home = () => {
       <div className="max-w-screen-xl mx-auto min-h-screen px-4 md:px-6 mt-6 mb-20">
         <h3 className="text-center font-bold mb-6">{postCount} Posts found</h3>
         {loader ? (
-          <div className="h-[40vh] flex justify-center items-center">
+          <div className="h-[30vh] flex justify-center items-center">
             <Loader />
           </div>
         ) : postCount === 0 ? (
